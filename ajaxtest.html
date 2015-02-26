@@ -1,0 +1,127 @@
+<html>
+<head>
+	<style type="text/css">
+		#dvdplayer{
+			position: absolute;
+			z-index: 200;
+			background: #eecc00;
+			color: #0000FF;
+		}
+		#cart{
+			position: absolute;
+			background: #00ff00;
+			color: #000000;	
+		}
+	</style>
+	
+	<script language="javascript">
+		var offsetX;
+		var offsetY;
+		function processMouseDown(e)
+		{
+			var event = new MouseEvent(e);
+			addListener("mousemove",processMouseMove);
+			addListener("mouseup",processMouseUp);
+			offsetX = event.x - parseInt(event.target.style.left);
+			offsetY = event.y - parseInt(event.target.style.top);
+			document.getElementById("targetDiv").innerHTML = "";
+		}
+
+		function processMouseMove(e)
+		{
+			var event = new MouseEvent(e);
+			var x = event.x - offsetX;
+			var y = event.y - offsetY;
+			event.target.style.left = x + "px";
+			event.target.style.top = y + "px";
+		}
+
+		function processMouseUp(e)
+		{
+			var event = new MouseEvent(e);
+			removeListener("mousemove",processMouseMove);
+			removeListener("mouseup",processMouseUp);
+			var cart = document.getElementById("cart");
+			var cartx = parseInt(cart.style.left);
+			var carty = parseInt(cart.style.top);
+			var cwidth = parseInt(cart.style.width);
+			var cheight = parseInt(cart.style.height);
+
+			if(event.x > cartx && event.x < cartx+cwidth &&
+				event.y > carty && event.y < carty+cheight)
+			{
+				var XMLHttpRequestObject = false;
+				XMLHttpRequestObject = new XMLHttpRequest();	
+				
+				if(XMLHttpRequestObject){
+					XMLHttpRequestObject.open("GET","buy.txt");
+					
+					XMLHttpRequestObject.onreadystatechange = function()
+					{
+						if(XMLHttpRequestObject.readyState == 4 &&
+							XMLHttpRequestObject.status == 200)
+						{
+							document.getElementById("targetDiv").innerHTML = 
+							XMLHttpRequestObject.responseText;
+							delete XMLHttpRequestObject;
+							XMLHttpRequestObject = null;
+						}	
+					}
+					XMLHttpRequestObject.send(null);
+				}
+			}
+		}
+
+		function MouseEvent(e)
+		{
+			if(e){
+				this.e = e;
+			}else {
+				this.e = window.event;
+			}
+
+			if(e.pageX){
+				this.x = e.pageX;
+			}else{
+				this.x = e.clientX;
+			}
+
+			if(e.pageY){
+				this.y = e.pageY;
+			}else{
+				this.y = e.clientY;
+			}
+
+			if(e.target){
+				this.target = e.target;
+			}else{
+				this.target = e.srcElement;
+			}
+		}
+
+		function addListener(type,callback)
+		{
+			if(document.addEventListener){
+				document.addEventListener(type,callback,false);
+			}else if(document.attachEvent){
+				document.attachEvent("on"+type,callback,false);
+			}
+		}
+
+		function removeListener(type,callback)
+		{
+			if(document.removeEventListener){
+				document.removeEventListener(type,callback,false);
+			}else if(document.detachEvent){
+				document.detachEvent("on"+type,callback,false);
+			}
+		}
+	</script>
+</head>
+<body>
+	<h1>Buy a DVD player--drag it to the shopping cart</h1>
+	<div id="targetDiv"></div>
+	<div id="dvdplayer" style="left:180px; top:150px; width:80px; height:60px;" onmousedown="processMouseDown(event);">DVD PLAYER</div>
+	<div id="cart" style="left:350px; top:250px; width:200px; height:100px;">SHOPPING CART</div>
+</body>
+</html>

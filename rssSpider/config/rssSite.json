@@ -1,0 +1,19 @@
+{
+	"sites": [
+		{
+			"from": "netEase",
+			"work": "true",
+			"contentId": "endText",
+			"adClass": "gg200x300",
+			"encoding": "gbk",
+			"filterImg": "http://img1.cache.netease.com/cnews/css13/img/end_news.png",
+			"channel": [
+				{
+					"name": "rss_qn",
+					"title": "网易最新新闻",
+					"link": "http://news.163.com/special/00011K6L/rss_gn.xml"
+				}		
+			]	
+		}
+	]
+}
